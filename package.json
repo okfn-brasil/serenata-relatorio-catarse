@@ -1,0 +1,16 @@
+{
+  "name": "serenata-relatorio-catarse",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "elm make src/Main.elm --optimize --output=dist/app.js",
+    "dev": "elm make src/Main.elm --debug --output=dist/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okfn-brasil/serenata-relatorio-catarse.git"
+  },
+  "license": "GPL-3.0",
+  "dependencies": {
+    "elm": "^0.19.0-bugfix2"
+  }
+}

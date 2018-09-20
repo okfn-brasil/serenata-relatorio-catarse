@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rosie nas Eleições 2018</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.17.0/lazyload.min.js"></script>
+    <script src="/app.js"></script>
+    <style>
+        #main-table, #loading, #failed, .form {
+          margin: 3rem auto;
+          padding: 0 3rem
+        }
+        #failed, #no-results { text-align: center }
+        td { line-height: 2.1 }
+        #footer a { color: rgba(0, 0, 0, .4) }
+        #footer a:hover { color: rgba(0, 0, 0, .6) }
+        #footer i.icon { margin: 0 .5rem }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const node = document.getElementById("app");
+      const app = Elm.Main.init({node: node});
+    </script>
+  </body>
+</html>
