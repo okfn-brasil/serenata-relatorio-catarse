@@ -5,7 +5,7 @@ import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
 import Helpers.Form exposing (filterCandidate, posts, states)
 import Helpers.Name exposing (capitalize)
-import Html exposing (Html, a, div, h4, i, img, input, label, select, table, tbody, td, text, th, thead, tr)
+import Html exposing (Html, a, div, footer, form, h4, i, img, input, label, main_, select, table, tbody, td, text, th, thead, tr)
 import Html.Attributes exposing (alt, class, for, href, id, src, type_, value)
 import Html.Events exposing (onInput)
 import Json.Decode exposing (map, string)
@@ -13,21 +13,22 @@ import Model exposing (Candidate, Model, Suspicion)
 import Update exposing (Msg(..))
 
 
-loadingView : Html Msg
+loadingView : List (Html Msg)
 loadingView =
-    div [ id "loading", class "ui active centered inline loader" ] []
+    [ div [ class "ui active centered inline loader" ] [] ]
 
 
-failedView : Html Msg
+failedView : List (Html Msg)
 failedView =
-    div
-        [ id "failed", class "ui active centered inline" ]
+    [ div
+        [ class "ui active centered inline" ]
         [ text "Erro ao carregar o site. Por favor, tente novamente." ]
+    ]
 
 
-form : Model -> Html Msg
-form model =
-    div
+formView : Model -> Html Msg
+formView model =
+    form
         [ class "ui form" ]
         [ div
             [ class "fields" ]
@@ -60,8 +61,8 @@ form model =
         ]
 
 
-suspicion : Suspicion -> Html Msg
-suspicion data =
+suspicionView : Suspicion -> Html Msg
+suspicionView data =
     a
         [ class "ui label"
         , href data.url
@@ -71,8 +72,8 @@ suspicion data =
         ]
 
 
-row : Candidate -> Html Msg
-row candidate =
+rowView : Candidate -> Html Msg
+rowView candidate =
     let
         count : String
         count =
@@ -125,26 +126,26 @@ row candidate =
                     [ class "ui label" ]
                     [ text "Total", div [ class "detail" ] [ text total ] ]
                 ]
-            , td [] (List.map suspicion candidate.suspicions)
+            , td [] (List.map suspicionView candidate.suspicions)
             ]
 
 
-contents : Model -> Html Msg
-contents model =
+tableView : Model -> Html Msg
+tableView model =
     let
         rows : List (Html Msg)
         rows =
             model.candidates
                 |> List.filter (filterCandidate model.form)
-                |> List.map row
+                |> List.map rowView
     in
         if List.isEmpty rows then
             div
-                [ id "no-results" ]
+                [ class "centered" ]
                 [ text "Nenhum candidato(a) de acordo com esses filtros" ]
         else
             table
-                [ id "main-table", class "ui very basic collapsing celled table" ]
+                [ class "ui table" ]
                 [ thead
                     []
                     [ tr
@@ -159,31 +160,46 @@ contents model =
                 ]
 
 
-footer : Html Msg
-footer =
-    h4
-        [ id "footer", class "ui horizontal divider header" ]
-        [ a
-            [ class "item"
-            , href "https://github.com/okfn-brasil/serenata-relatorio-catarse"
-            ]
-            [ i [ class "heart outline icon" ] []
-            , text "Feito com dados abertos e código aberto"
-            , i [ class "code icon" ] []
+disclaimerView : Html Msg
+disclaimerView =
+    div
+        [ class "ui purple inverted segment" ]
+        [ text """
+        """ ]
+
+
+footerView : Html Msg
+footerView =
+    footer
+        []
+        [ h4
+            [ class "ui horizontal divider header" ]
+            [ a
+                [ class "item"
+                , href "https://github.com/okfn-brasil/serenata-relatorio-catarse"
+                ]
+                [ i [ class "heart outline icon" ] []
+                , text "Feito com dados abertos e código aberto"
+                , i [ class "code icon" ] []
+                ]
             ]
         ]
 
 
-mainView : Model -> Html Msg
+mainView : Model -> List (Html Msg)
 mainView model =
-    div [] [ form model, contents model, footer ]
+    [ disclaimerView
+    , formView model
+    , tableView model
+    , footerView
+    ]
 
 
 view : Model -> Document Msg
 view model =
     let
-        mainHtml : Html Msg
-        mainHtml =
+        contents : List (Html Msg)
+        contents =
             if List.isEmpty model.candidates then
                 case model.error of
                     Just error ->
@@ -193,13 +209,6 @@ view model =
                         loadingView
             else
                 mainView model
-
-        body : List (Html Msg)
-        body =
-            [ div
-                [ class "ui centered grid" ]
-                [ div [ class "sixteen wide column" ] [ mainHtml ] ]
-            ]
 
         title : String
         title =
@@ -213,4 +222,4 @@ view model =
             else
                 "Rosie nas Eleições 2018"
     in
-        Document title body
+        Document title [ main_ [] contents ]
