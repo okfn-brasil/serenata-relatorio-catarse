@@ -5,7 +5,7 @@ import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
 import Helpers.Form exposing (filterCandidate, posts, states)
 import Helpers.Name exposing (capitalize)
-import Html exposing (Html, a, div, footer, form, h4, i, img, input, label, main_, select, table, tbody, td, text, th, thead, tr)
+import Html exposing (..)
 import Html.Attributes exposing (alt, class, for, href, id, src, type_, value)
 import Html.Events exposing (onInput)
 import Json.Decode exposing (map, string)
@@ -164,8 +164,24 @@ disclaimerView : Html Msg
 disclaimerView =
     div
         [ class "ui purple inverted segment" ]
-        [ text """
-        """ ]
+        [ p
+            []
+            [ text """
+                Olá. Aqui embaixo você vai ver uma lista com políticos que
+                estão concorrendo nessas eleições e apresentaram despesas
+                suspeitas com a cota parlamentar. Antes de continuar, você
+                precisa saber que este não é um ranking de corrupção, mas uma
+                lista de despesas que merecem ser checadas novamente, por serem
+                suspeitas.
+            """ ]
+        , p
+            []
+            [ text """
+                Aparecer nas linhas abaixo não é condenação a ninguém, assim
+                como não aparecer não é atestado de idoneidade.
+            """ ]
+        , p [] [ text "Aproveite :)" ]
+        ]
 
 
 footerView : Html Msg
