@@ -220,6 +220,9 @@ view model =
                     Nothing ->
                         "Carregando…"
             else
-                "Rosie nas Eleições 2018"
+                """
+                Relatório para apoiadores da Operação Serenata de Amor no
+                Catarse (2016) — Rosie nas Eleições 2018
+                """
     in
         Document title [ main_ [] contents ]
