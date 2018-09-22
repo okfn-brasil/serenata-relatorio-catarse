@@ -26,7 +26,7 @@ updateForm form key value =
             , ( "post", form.post )
             ]
                 |> Dict.fromList
-                |> Dict.update key (\_ -> Just (String.toUpper value))
+                |> Dict.update key (\_ -> Just value)
     in
         Form
             (Dict.get "name" formAsDict |> Maybe.withDefault "")
