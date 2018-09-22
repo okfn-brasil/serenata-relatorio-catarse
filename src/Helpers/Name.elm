@@ -1,63 +1,27 @@
 module Helpers.Name exposing (capitalize)
 
-
-replaceExceptions : String -> String
-replaceExceptions value =
-    let
-        lower : List String
-        lower =
-            [ "Do", "Da", "Dos", "Das", "De", "Des", "Van", "Von" ]
-
-        replacements : List ( String, String )
-        replacements =
-            [ ( "1O", "1º" )
-            , ( "2O", "2º" )
-            ]
-
-        replaceLower : String -> String
-        replaceLower word =
-            if List.member word lower then
-                String.toLower word
-            else
-                word
-
-        replaceWord : String -> String
-        replaceWord word =
-            replacements
-                |> List.filter (\pair -> Tuple.first pair == word)
-                |> List.head
-                |> Maybe.map (\pair -> Tuple.second pair)
-                |> Maybe.withDefault word
-    in
-        value
-            |> String.split " "
-            |> List.map (replaceLower >> replaceWord)
-            |> String.join " "
+import Regex
 
 
 capitalize : String -> String
 capitalize name =
     let
-        letters : List Char
-        letters =
-            String.toList name
+        exceptions : List String
+        exceptions =
+            [ "do", "da", "dos", "das", "de", "des", "van", "von" ]
 
-        previousLetters : List Char
-        previousLetters =
-            ' ' :: letters
+        safeRegex : String -> Regex.Regex
+        safeRegex =
+            Maybe.withDefault Regex.never << Regex.fromString
 
-        pairs : List ( Char, Char )
-        pairs =
-            List.map2 Tuple.pair letters previousLetters
-
-        nextLetter : ( Char, Char ) -> Char
-        nextLetter ( letter, previous ) =
-            if Char.isAlpha previous then
-                Char.toLower letter
+        capitalizeWord : String -> String
+        capitalizeWord str =
+            if List.member str exceptions then
+                str
             else
-                Char.toUpper letter
+                Regex.replace (safeRegex "^(\\w)") (.match >> String.toUpper) str
     in
-        pairs
-            |> List.map nextLetter
-            |> String.fromList
-            |> replaceExceptions
+        name
+            |> String.toLower
+            |> Regex.replace (safeRegex "^\\do ") (.match >> String.replace "o" "º")
+            |> Regex.replace (safeRegex "(\\w+)") (.match >> capitalizeWord)
