@@ -3,7 +3,7 @@ module View exposing (view)
 import Browser exposing (Document)
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
-import Helpers.Form exposing (filterCandidate, posts, states)
+import Helpers.Form exposing (filterCandidate, filters, posts, states)
 import Helpers.Name exposing (capitalize)
 import Html exposing (..)
 import Html.Attributes exposing (alt, class, for, href, id, src, type_, value)
@@ -33,7 +33,7 @@ formView model =
         [ div
             [ class "fields" ]
             [ div
-                [ class "eight wide field" ]
+                [ class "seven wide field" ]
                 [ label [ for "name" ] [ text "Nome" ]
                 , input
                     [ id "name"
@@ -51,11 +51,18 @@ formView model =
                     (states model.candidates)
                 ]
             , div
-                [ class "five wide field" ]
+                [ class "three wide field" ]
                 [ label [ for "post" ] [ text "Cargo" ]
                 , select
                     [ id "cargo", onInput (UpdateForm "post") ]
                     (posts model.candidates)
+                ]
+            , div
+                [ class "three wide field" ]
+                [ label [ for "filter" ] [ text "Suspeitas" ]
+                , select
+                    [ id "filter", onInput (UpdateForm "filter") ]
+                    filters
                 ]
             ]
         ]

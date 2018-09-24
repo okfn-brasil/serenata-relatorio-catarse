@@ -32,6 +32,7 @@ updateForm form key value =
             (Dict.get "name" formAsDict |> Maybe.withDefault "")
             (Dict.get "state" formAsDict |> Maybe.withDefault "")
             (Dict.get "post" formAsDict |> Maybe.withDefault "")
+            (Dict.get "filter" formAsDict |> Maybe.withDefault "")
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

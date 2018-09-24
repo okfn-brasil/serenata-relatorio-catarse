@@ -1,4 +1,4 @@
-module Helpers.Form exposing (filterCandidate, states, posts)
+module Helpers.Form exposing (filterCandidate, filters, states, posts)
 
 import Html exposing (Html, option, text)
 import Html.Attributes exposing (value)
@@ -17,6 +17,14 @@ type alias Option =
     { name : String
     , value : String
     }
+
+
+filters : List (Html Msg)
+filters =
+    [ option [ value "none" ] [ text "Todas" ]
+    , option [ value "number-of-suspicions" ] [ text "Mais de 10 suspeitas" ]
+    , option [ value "total-sum" ] [ text "Mais de R$ 1.000,00 em suspeitas" ]
+    ]
 
 
 states : List Candidate -> List (Html Msg)
@@ -78,6 +86,39 @@ byName form candidate =
             (String.toUpper candidate.name)
 
 
+byFilterNumberOfSuspicions : Candidate -> Bool
+byFilterNumberOfSuspicions candidate =
+    if List.length candidate.suspicions >= 10 then
+        True
+    else
+        False
+
+
+byFilterTotalSum : Candidate -> Bool
+byFilterTotalSum candidate =
+    let
+        sum : Float
+        sum =
+            candidate.suspicions
+                |> List.map .value
+                |> List.sum
+    in
+        if sum >= 1000.0 then
+            True
+        else
+            False
+
+
+byFilter : Form -> Candidate -> Bool
+byFilter form candidate =
+    if form.filter == "number-of-suspicions" then
+        byFilterNumberOfSuspicions candidate
+    else if form.filter == "total-sum" then
+        byFilterTotalSum candidate
+    else
+        True
+
+
 filterCandidate : Form -> Candidate -> Bool
 filterCandidate form candidate =
-    (byState form candidate) && (byPost form candidate) && (byName form candidate)
+    (byState form candidate) && (byPost form candidate) && (byName form candidate) && (byFilter form candidate)

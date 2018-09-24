@@ -7,6 +7,7 @@ type alias Form =
     { name : String
     , state : String
     , post : String
+    , filter : String
     }
 
 
@@ -36,7 +37,7 @@ type alias Model =
 
 form : Form
 form =
-    Form "" "" ""
+    Form "" "" "" ""
 
 
 model : Model
